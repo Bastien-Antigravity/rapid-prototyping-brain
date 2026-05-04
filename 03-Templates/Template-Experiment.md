@@ -30,7 +30,7 @@ _Fill after testing._
 
 ## 🎓 Graduation Protocol
 If `status: validated`, the **DocMaintainer** must:
-1. Create a BDD spec in `business-bdd-brain/02-Behavior-Specs/<repo>/` based on the results.
+1. Create a BDD spec in `02-Business-BDD/02-Behavior-Specs/<repo>/` based on the results.
 2. Create a sandbox feature in `sandbox-testing/features/FEAT-XXX-<name>.yaml`.
 3. Update this file: `status: graduated`, `graduated_to: FEAT-XXX`.
 4. Switch the work to **Mode 1 (Spec-First)** for production hardening.

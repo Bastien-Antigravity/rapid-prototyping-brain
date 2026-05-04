@@ -3,7 +3,7 @@
 Welcome to the **Fluid Zone**. This brain is dedicated to high-speed experimentation, UI/UX mockups, and "Idea-to-Code" sprints without the friction of mandatory BDD specs.
 
 ## 🚀 Labs Workflow
-1. **Pitch**: Create a new file in `01-Experiment-Index/` using the **[[rapid-prototyping-brain/03-Templates/Template-Experiment|Experiment Template]]**.
+1. **Pitch**: Create a new file in `01-Experiment-Index/` using the **[[04-Rapid-Prototyping/03-Templates/Template-Experiment|Experiment Template]]**.
 2. **Draft**: The AI will generate a prototype directly in the target repository.
 3. **Verify**: Test the prototype in a local environment.
 4. **Graduation**: If successful, the **DocMaintainer** performs a "Graduation Ceremony" to move the feature to **Zone 1 (Frozen)** standards (BDD Spec + Sandbox Test).
