@@ -1,3 +1,9 @@
+---
+microservice: obsidian-brain
+type: experiment
+status: fluid
+---
+
 # Experiment: [Name]
 
 ---
@@ -12,8 +18,11 @@ graduated_to: null
 What are you trying to prove? One sentence.
 
 ## 🧪 Prototype
+- **Mode**: Fresh / Seed (Start from source)
 - **Language**: Go / Python / Rust / Other
-- **Location**: `<target-repo>/` or standalone script
+- **Source Context**: `[local path | github url | none]`
+- **Ingestion Strategy**: `[full_ingest | module_only | interface_only]`
+- **Location**: `<target-repo>/experiments/` or standalone script
 - **Time Budget**: 2h / 4h / 1 day
 
 ## 📋 Steps
