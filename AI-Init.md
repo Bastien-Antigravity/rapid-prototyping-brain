@@ -1,3 +1,9 @@
+---
+microservice: rapid-prototyping-brain
+type: governance
+status: active
+---
+
 # ⚡ AI Initialization: rapid-prototyping-brain
 
 > [!IMPORTANT] MANDATORY INITIALIZATION
