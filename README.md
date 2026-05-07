@@ -1,5 +1,5 @@
 ---
-microservice: obsidian-brain
+microservice: rapid-prototyping-brain
 type: experiment
 status: fluid
 ---
