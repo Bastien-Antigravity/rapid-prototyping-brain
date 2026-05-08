@@ -2,6 +2,10 @@
 microservice: rapid-prototyping-brain
 type: governance
 status: active
+tags:
+- '#type/governance'
+- null
+- '#state/active'
 ---
 
 # ⚡ AI Initialization: rapid-prototyping-brain

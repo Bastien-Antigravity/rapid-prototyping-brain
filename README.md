@@ -2,6 +2,10 @@
 microservice: rapid-prototyping-brain
 type: experiment
 status: fluid
+tags:
+- '#state/fluid'
+- null
+- '#type/experiment'
 ---
 
 # 🧪 Zone 2: Rapid Prototyping Labs (Free Mode)

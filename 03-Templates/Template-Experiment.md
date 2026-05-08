@@ -2,6 +2,10 @@
 microservice: obsidian-brain
 type: experiment
 status: fluid
+tags:
+- '#state/fluid'
+- null
+- '#type/experiment'
 ---
 
 # Experiment: [Name]
