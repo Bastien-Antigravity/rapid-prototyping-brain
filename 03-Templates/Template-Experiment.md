@@ -3,6 +3,7 @@ microservice: obsidian-brain
 type: experiment
 status: fluid
 tags:
+- \'#service/obsidian-brain\'
 - '#state/fluid'
 - null
 - '#type/experiment'

@@ -3,6 +3,7 @@ microservice: rapid-prototyping-brain
 type: governance
 status: active
 tags:
+- \'#service/rapid-prototyping-brain\'
 - '#type/governance'
 - null
 - '#state/active'

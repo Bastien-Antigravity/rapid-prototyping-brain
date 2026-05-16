@@ -3,6 +3,7 @@ microservice: rapid-prototyping-brain
 type: experiment
 status: fluid
 tags:
+- \'#service/rapid-prototyping-brain\'
 - '#state/fluid'
 - null
 - '#type/experiment'
