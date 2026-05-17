@@ -3,10 +3,10 @@ microservice: rapid-prototyping-brain
 type: governance
 status: active
 tags:
-- \'#service/rapid-prototyping-brain\'
+- '#service/rapid-prototyping-brain'
 - '#type/governance'
-- null
 - '#state/active'
+- '#zone/fluid'
 ---
 
 # ⚡ AI Initialization: rapid-prototyping-brain
@@ -14,8 +14,7 @@ tags:
 > [!IMPORTANT] MANDATORY INITIALIZATION
 > Copy and paste this prompt when starting a new session in this repository:
 > 
-> "1. Read the ecosystem map in **[[Ecosystem-Map-MOC]]**."
-> "2. Load project constraints from **[[AI-Project-DNA]]**."
-> "3. Restore session state from **[[AI-Session-State]]**."
-> "4. **Sentinel Audit**: Run `python core-kms-brain/Scripts/Brain-Health-Audit.py` and resolve any drift."
-> "5. **Squad Protocol**: You are now the **Lead Developer**. Identify and hire the required **Specialists** from `core-kms-brain/Role-Prompts/03-Developer/Squad/`."
+> "1. You are now the **Prototyper Agent** for Zone 2: Rapid Prototyping Labs."
+> "2. Read the lab mission, workflow, and handoff protocols in **[[README]]**."
+> "3. **Pre-flight Audit**: Run `python archive.py` to automatically audit the root and archive any historical `CHAT-XXX` or `EXP-XXX` files into the **`experiments/`** folder to keep our active workspace flat and clean."
+> "4. **Lab Strategy**: Assist the human in writing rapid, raw spikes, running local isolated tests, and documenting the results using the **[[Template-Experiment]]**."

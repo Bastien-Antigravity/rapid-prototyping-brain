@@ -3,33 +3,49 @@ microservice: rapid-prototyping-brain
 type: experiment
 status: fluid
 tags:
-- \'#service/rapid-prototyping-brain\'
+- '#service/rapid-prototyping-brain'
 - '#state/fluid'
-- null
 - '#type/experiment'
+- '#zone/fluid'
 ---
 
-# 🧪 Zone 2: Rapid Prototyping Labs (Free Mode)
+# 🧪 Zone 2: Rapid Prototyping Labs (Implementation Lab)
 
-Welcome to the **Fluid Zone**. This brain is dedicated to high-speed experimentation, UI/UX mockups, and "Idea-to-Code" sprints without the friction of mandatory BDD specs.
+Welcome to the **Implementation Lab**. This zone is the primary entry point for converting raw **LLM Chat**, unstructured code spikes, and human ideas into organized, rule-compliant code.
+
+The Labs serve as the "Execution Bridge" between the **[[02-Business-BDD/README|🎭 Business BDD]]** (which defines *what* to build) and the production fleet. Every experiment here aims to fulfill a specific **Behavior Specification** using the ecosystem's engineering standards.
 
 ## 🚀 Labs Workflow
-1. **Pitch**: Create a new file in `01-Experiment-Index/` using the **[[04-Rapid-Prototyping/03-Templates/Template-Experiment|Experiment Template]]**.
-    - **Fresh Mode**: Start from an idea (greenfield).
-    - **Seed Mode**: Start from existing source code (Local, GitHub, or URL).
-2. **Draft**: The AI will generate a prototype. 
-    - **Isolation Protocol**: To protect production code, experiments should be drafted into an `experiments/` or `lab/` directory within the target repo unless otherwise specified.
-3. **Verify**: Test the prototype in a local environment.
-4. **Graduation**: If successful, the **DocMaintainer** performs a "Graduation Ceremony" to move the feature to **Zone 1 (Frozen)** standards (BDD Spec + Sandbox Test).
+1.  **The Archive (Pre-flight)**: Before starting a new experiment, move any existing **`CHAT-XXX-[Slug].md`** and **`EXP-XXX-[Slug].md`** files from the root into the **`experiments/`** folder. This archives the history and uses ignore files (`.aiignore`, `.mcpignore`, `.geminiignore`) to instantly hide them from active AI context, preventing distraction.
+2.  **The Spark**: A new raw idea, prompt, or LLM chat transcript containing draft code is saved as a **`CHAT-XXX-[Name].md`** file in the **root** of this repository (No structure or linting required).
+3.  **The Test**: The developer or AI runs quick, isolated tests on the raw code to verify the core concept works.
+4.  **The Handoff**: The **Orchestrator** and **Developer** agents are "hired" to ingest the raw chat file, apply the **[[03-Tech-Stack/README|🏗️ Tech Stack Coding Rules]]**, and output clean, production-grade files in the target repository.
+5.  **The Pitch**: The completed experiment is recorded as an **`EXP-XXX-[Name].md`** file in the **root** using the **[[Template-Experiment|🧪 Experiment Template]]** to preserve the transition and BDD links.
 
-## 📂 Structure
-- `01-Experiment-Index/`: A ledger of all active and historical prototypes.
-- `02-Scratchpads/`: Temporary notes and raw code snippets.
-- `03-Templates/`: Quick-start templates for different types of experiments.
+## 🤖 The Agent Handoff Protocol (From Chaos to Code)
+To convert a raw scratchpad draft into fleet-compliant code, the user invokes the downstream agents using the following protocol:
+
+### Step 1: Hire the Orchestrator
+The **Orchestrator** reads the raw chat file, maps it to a target behavior in `02-Business-BDD/README`, and generates the execution path.
+> **Hiring Prompt**:
+> *"Hire the Orchestrator. Read the raw draft in `04-Rapid-Prototyping/CHAT-XXX-[Name].md`. Map this to the target behavior in `02-Business-BDD/README` and spawn the execution task for the Developer."*
+
+### Step 2: Hire the Developer Specialist
+The **Developer** (e.g., Go, Rust, or Python Specialist) takes the task, reads the chat file, and writes the production code in the target microservice repository—strictly adhering to Tier 3 coding rules (e.g., Go Concurrency, Memory management).
+> **Hiring Prompt**:
+> *"Hire the [Language] Specialist. Read the Orchestrator task and the raw draft in `04-Rapid-Prototyping/CHAT-XXX-[Name].md`. Implement this in the target repository following the Tech Stack Coding Rules."*
+
+## 📂 Flat Structure
+- **`README.md`**: The mission statement and agent protocols.
+- **`AI-Init.md`**: The agent "hiring" instructions.
+- **`Template-Experiment.md`**: The standard pitch template.
+- **`CHAT-XXX-[Slug].md`**: The *current active* chat and brainstorm file.
+- **`EXP-XXX-[Slug].md`**: The *current active* experiment record.
+- **`experiments/`**: Archive directory for old experiments/chats. Contains `.aiignore`, `.mcpignore`, and `.geminiignore` to block AI context scanning.
 
 ## 🚦 Current Active Lab
-- **None**. Waiting for the first pitch.
+- **None**. Waiting for the first spark.
 
 ---
 > [!TIP]
-> Use this zone when you want to "See it working" before you "Make it perfect."
+> Use this zone to "See it working" before you "Make it perfect." By keeping only the active files at the root and archiving old ones to `experiments/`, we protect the AI from context overflow while preserving historical records.
