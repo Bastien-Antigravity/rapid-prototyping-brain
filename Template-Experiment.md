@@ -6,6 +6,7 @@ tags:
 - '#type/template'
 - '#service/rapid-prototyping-brain'
 - '#zone/fluid'
+- '#state/active'
 ---
 # 🧪 Experiment: [Project Name]
 
