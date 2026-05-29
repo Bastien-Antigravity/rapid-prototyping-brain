@@ -1,51 +1,71 @@
 ---
 microservice: rapid-prototyping-brain
 type: experiment
-status: fluid
+status: active
 tags:
 - '#service/rapid-prototyping-brain'
-- '#state/fluid'
+- '#state/active'
 - '#type/experiment'
-- '#zone/fluid'
+- '#zone/2-fluid'
 ---
-
 # 🧪 Zone 2: Rapid Prototyping Labs (Implementation Lab)
 
-Welcome to the **Implementation Lab**. This zone is the primary entry point for converting raw **LLM Chat**, unstructured code spikes, and human ideas into organized, rule-compliant code.
-
-The Labs serve as the "Execution Bridge" between the **[[02-Business-BDD/README|🎭 Business BDD]]** (which defines *what* to build) and the production fleet. Every experiment here aims to fulfill a specific **Behavior Specification** using the ecosystem's engineering standards.
-
-## 🚀 Labs Workflow
-1.  **The Archive (Pre-flight)**: Before starting a new experiment, move any existing **`CHAT-XXX-[Slug].md`** and **`EXP-XXX-[Slug].md`** files from the root into the **`experiments/`** folder. This archives the history and uses ignore files (`.aiignore`, `.mcpignore`, `.geminiignore`) to instantly hide them from active AI context, preventing distraction.
-2.  **The Spark**: A new raw idea, prompt, or LLM chat transcript containing draft code is saved as a **`CHAT-XXX-[Name].md`** file in the **root** of this repository (No structure or linting required).
-3.  **The Test**: The developer or AI runs quick, isolated tests on the raw code to verify the core concept works.
-4.  **The Handoff**: The **Orchestrator** and **Developer** agents are "hired" to ingest the raw chat file, apply the **[[03-Tech-Stack/README|🏗️ Tech Stack Coding Rules]]**, and output clean, production-grade files in the target repository.
-5.  **The Pitch**: The completed experiment is recorded as an **`EXP-XXX-[Name].md`** file in the **root** using the **[[Template-Experiment|🧪 Experiment Template]]** to preserve the transition and BDD links.
-
-## 🤖 The Agent Handoff Protocol (From Chaos to Code)
-To convert a raw scratchpad draft into fleet-compliant code, the user invokes the downstream agents using the following protocol:
-
-### Step 1: Hire the Orchestrator
-The **Orchestrator** reads the raw chat file, maps it to a target behavior in `02-Business-BDD/README`, and generates the execution path.
-> **Hiring Prompt**:
-> *"Hire the Orchestrator. Read the raw draft in `04-Rapid-Prototyping/CHAT-XXX-[Name].md`. Map this to the target behavior in `02-Business-BDD/README` and spawn the execution task for the Developer."*
-
-### Step 2: Hire the Developer Specialist
-The **Developer** (e.g., Go, Rust, or Python Specialist) takes the task, reads the chat file, and writes the production code in the target microservice repository—strictly adhering to Tier 3 coding rules (e.g., Go Concurrency, Memory management).
-> **Hiring Prompt**:
-> *"Hire the [Language] Specialist. Read the Orchestrator task and the raw draft in `04-Rapid-Prototyping/CHAT-XXX-[Name].md`. Implement this in the target repository following the Tech Stack Coding Rules."*
-
-## 📂 Flat Structure
-- **`README.md`**: The mission statement and agent protocols.
-- **`AI-Init.md`**: The agent "hiring" instructions.
-- **`Template-Experiment.md`**: The standard pitch template.
-- **`CHAT-XXX-[Slug].md`**: The *current active* chat and brainstorm file.
-- **`EXP-XXX-[Slug].md`**: The *current active* experiment record.
-- **`experiments/`**: Archive directory for old experiments/chats. Contains `.aiignore`, `.mcpignore`, and `.geminiignore` to block AI context scanning.
-
-## 🚦 Current Active Lab
-- **None**. Waiting for the first spark.
+Welcome to the **Implementation Lab**. This zone serves as the cognitive boundary for converting raw LLM brainstorm transcripts, third-party code samples, and human ideas into fleet-compliant code.
 
 ---
-> [!TIP]
-> Use this zone to "See it working" before you "Make it perfect." By keeping only the active files at the root and archiving old ones to `experiments/`, we protect the AI from context overflow while preserving historical records.
+
+## 🏛️ Core Workflow Paradigm
+
+The Prototyper Agent operates on a four-stage progressive validation pipeline:
+
+```
+┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│ 1. LLM INGESTION │ ──> │ 2. CLONE & STUB  │ ──> │ 3. COMPARE/MERGE │ ──> │ 4. ALIGN & DECIDE│
+└──────────────────┘     └──────────────────┘     └──────────────────┘     └──────────────────┘
+```
+
+### 📥 Step 1: LLM Chat Ingestion
+*   **Action**: Load the raw, long chat conversation transcript with the LLM (saved as `CHAT-XXX-[Slug].md` in the root).
+*   **Objective**: Perform extraction. Distill the conversation, isolate code blocks, compile specifications, and parse logical flows, discarding the conversational noise.
+
+### 🧬 Step 2: Clone & Stub Extraction
+*   **Action**: **Create a dedicated workspace folder at the root of `04-Rapid-Prototyping/`** for this new test (e.g. `04-Rapid-Prototyping/EXP-XXX-[Slug]/`). Reference or clone target production files (from active microservice repositories mapped in `06-Microservices/` or `05-Fleet-Operation/00-Repo-Control/inventory.json`) or default templates.
+*   **Automation**: Use `lab_manager.py` within the `.venv` virtual environment to automate sandbox creation, repository cloning, and file stub extraction:
+    ```bash
+    python lab_manager.py create EXP-XXX-[Slug]
+    python lab_manager.py clone EXP-XXX-[Slug] <repo_name_or_url>
+    python lab_manager.py extract EXP-XXX-[Slug] <repo_name> <relative_path_to_file>
+    ```
+*   **Objective**: Analyze structural patterns in isolation. Extract the active schemas, interfaces, base classes, and import requirements to establish a clean, compatible baseline. **All active spike code must live inside this root-level sandbox folder so the AI can access and edit it.**
+
+### 🔄 Step 3: Comparison & Merging
+*   **Action**: Perform side-by-side comparison between:
+    1.  The extracted production codebase / template files.
+    2.  The draft logic parsed from the LLM chat transcript.
+*   **Objective**: Merge the draft logic with the production stubs. Generate temporary runnable scripts (e.g. `spike_*.py` or `lab_*.go`) inside the dedicated root sandbox folder (`04-Rapid-Prototyping/EXP-XXX-[Slug]/`) to run isolated local tests.
+
+### 🏁 Step 4: Ecosystem Review & Merge Decisions
+*   **Action**: Audit the finalized sandbox scripts against the **Bastien-Antigravity Ecosystem Rules** (e.g. Virtual Environment Re-Execution, UTF-8 output encoding, nil-safe logging guards, and FFI Static Loading Laws) and propose the graduation path (`EXP-XXX-[Slug].md`).
+*   **Objective**: Execute one of the following decisions:
+    1.  **Accepted/Merged**: Propose the final diffs and merge them into the production microservice codebase.
+    2.  **Refused**: Reject the proposal. The root sandbox folder and spike files are deleted, and the history file (`EXP-XXX-[Slug].md`) is marked as `status: deprecated` or moved to the `/experiments/` archive.
+    3.  **Saved**: Retain the work for future implementation. The root sandbox folder is moved into `/experiments/` (where it is immediately ignored by `.aiignore` to prevent AI context pollution) and the proposal is marked as `status: draft`.
+    4.  **Completely Removed**: Delete the root sandbox folder, spike files, raw chats, and proposal notes entirely, leaving zero traces.
+
+---
+
+## 🤖 Agent Handoff Protocols (Hire the Prototyper)
+
+To execute a spike following this paradigm, invoke the squad using these hiring prompts:
+
+### 🎭 Ingestion & Isolation Prompt
+> *"Hire the Prototyper Agent. Read the long LLM chat transcript in `04-Rapid-Prototyping/CHAT-XXX-[Slug].md` and extract all raw code blocks. Then, **create a dedicated sandbox folder at the root of L04** (`04-Rapid-Prototyping/EXP-XXX-[Slug]/`) to mount the cloned production interface stubs."*
+
+### 🔄 Merging & Validation Prompt
+> *"Hire the Prototyper Agent. Compare the raw draft logic against the production stubs. Merge them into a runnable spike file **inside the root sandbox folder** and verify its execution behavior under isolated conditions."*
+
+### 🏁 Graduation & Decisions Prompt
+> *"Hire the Prototyper Agent. Review the completed spike against the Ecosystem Tech Stack guidelines and generate the merge proposal (`EXP-XXX-[Slug].md`). Present the four resolution choices: Merge, Refuse, Save, or Remove."*
+
+---
+*See Also: [[AI-Project-DNA]], [[AI-Session-State]], [[Template-Experiment]]*
