@@ -2,6 +2,7 @@
 microservice: rapid-prototyping-brain
 type: session-state
 status: active
+Mission-ID: LABS-ALIGN-2026-05-28
 tags:
 - '#service/rapid-prototyping-brain'
 - '#type/session-state'
