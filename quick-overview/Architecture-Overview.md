@@ -1,3 +1,13 @@
+--- 
+microservice: 04-Rapid-Prototyping
+type: overview
+status: active
+tags:
+- '#service/04-Rapid-Prototyping'
+- '#type/overview'
+- '#state/active'
+- '#ai/ignore'
+---
 # 🗺️ Labs Architecture Overview
 
 This document describes the structure and directory layout of the **Rapid Prototyping Labs**.

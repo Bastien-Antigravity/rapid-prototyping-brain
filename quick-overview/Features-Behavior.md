@@ -1,3 +1,13 @@
+--- 
+microservice: 04-Rapid-Prototyping
+type: overview
+status: active
+tags:
+- '#service/04-Rapid-Prototyping'
+- '#type/overview'
+- '#state/active'
+- '#ai/ignore'
+---
 # 🎭 Labs Features & Spikes Behavior
 
 This document outlines the standard behavioral expectations and lifecycles for spikes and experiments.

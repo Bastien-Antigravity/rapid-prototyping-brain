@@ -1,3 +1,13 @@
+--- 
+microservice: 04-Rapid-Prototyping
+type: overview
+status: active
+tags:
+- '#service/04-Rapid-Prototyping'
+- '#type/overview'
+- '#state/active'
+- '#ai/ignore'
+---
 # 🧪 Labs Testing Playbook
 
 This document defines how to test prototype scripts inside Level 04.
