@@ -2,6 +2,11 @@
 microservice: 04-Rapid-Prototyping
 type: governance
 status: active
+tags:
+- '#service/04-Rapid-Prototyping'
+- '#type/governance'
+- '#state/active'
+- '#zone/3-fleet'
 ---
 
 # ⚡ AI Initialization: 04-Rapid-Prototyping
