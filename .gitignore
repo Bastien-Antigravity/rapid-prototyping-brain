@@ -66,6 +66,7 @@ obj/
 secrets.yaml
 
 # --- Project Specific Noise ---
+logs/
 zzz_memo
 *.bak
 *.tmp

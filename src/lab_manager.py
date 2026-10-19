@@ -2,9 +2,20 @@
 # coding:utf-8
 
 """
-🧪 LAB MANAGER (Level 04 Prototyping Sandbox utility)
-Handles automated sandbox creation, repository cloning, stub extraction, and archiving.
+ESSENTIAL PROCESS:
+🧪 Lab Manager utility for Level 04 Rapid Prototyping Sandbox.
+Automates sandbox directory creation, repository cloning, stub extraction, and archiving.
+
+DATA FLOW:
+1. Loads inventory from Level 05 Fleet Operation.
+2. Clones or mounts target microservice repositories into sandbox.
+3. Sets up virtual environments and logs operations via UniLog.
+
+KEY PARAMETERS:
+- lab_root: Root directory of 04-Rapid-Prototyping.
+- inventory_path: Path to inventory.json in 05-Fleet-Operation.
 """
+
 import os
 import sys
 import subprocess
@@ -12,27 +23,38 @@ import shutil
 import json
 from pathlib import Path
 
-# --- Virtual Environment Re-Execution ---
-_venv_dir = os.path.dirname(os.path.abspath(__file__))
-_venv_python = os.path.join(_venv_dir, ".venv", "bin", "python3") if os.name != "nt" else os.path.join(_venv_dir, ".venv", "Scripts", "python.exe")
-if os.path.exists(_venv_python) and not os.path.samefile(sys.executable, _venv_python):
-    try:
-        os.execl(_venv_python, _venv_python, *sys.argv)
-    except OSError:
-        pass
+# -----------------------------------------------------------------------------
 
-# --- Helper Functions ---
+try:
+    from microservice_toolbox.utils.bootstrap import bootstrap_microservice
+except ImportError:
+    for parent in Path(__file__).resolve().parents:
+        toolbox_py = parent / "microservice-toolbox" / "python"
+        if toolbox_py.exists():
+            sys.path.insert(0, str(toolbox_py))
+            break
+    from microservice_toolbox.utils.bootstrap import bootstrap_microservice
+
+bootstrap_microservice(__file__, app_name="lab_manager")
+
+from microservice_toolbox.logger import UniLog
+logger = UniLog(app_name="lab_manager", config_profile="standalone", logger_profile="devel")
+
+# -----------------------------------------------------------------------------
+# Helper Functions
+# -----------------------------------------------------------------------------
 
 def load_inventory() -> dict:
     """Attempts to load the repository inventory from Level 05."""
-    root = Path(__file__).resolve().parent
-    inventory_path = root / "../05-Fleet-Operation/00-Repo-Control/inventory.json"
+    lab_root = Path(__file__).resolve().parent.parent
+    vault_root = lab_root.parent
+    inventory_path = vault_root / "05-Fleet-Operation" / "00-Repo-Control" / "inventory.json"
     if inventory_path.exists():
         try:
             with open(inventory_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"⚠️ Failed to parse inventory: {e}")
+            logger.warning(f"Failed to parse inventory: {e}")
     return {}
 
 def get_repo_url(repo_name_or_url: str) -> str:
@@ -53,24 +75,24 @@ def get_repo_url(repo_name_or_url: str) -> str:
 
 def create_sandbox(sandbox_name: str) -> Path:
     """Creates a dedicated sandbox workspace folder at the root of L04."""
-    root = Path(__file__).resolve().parent
-    sandbox_dir = root / sandbox_name
+    lab_root = Path(__file__).resolve().parent.parent
+    sandbox_dir = lab_root / sandbox_name
     
     if sandbox_dir.exists():
-        print(f"ℹ️ Sandbox '{sandbox_name}' already exists.")
+        logger.info(f"Sandbox '{sandbox_name}' already exists.")
         return sandbox_dir
         
-    print(f"🏗️ Creating isolated sandbox: {sandbox_name}...")
+    logger.info(f"🏗️ Creating isolated sandbox: {sandbox_name}...")
     (sandbox_dir / "clones").mkdir(parents=True, exist_ok=True)
     (sandbox_dir / "stubs").mkdir(parents=True, exist_ok=True)
     
-    print(f"✅ Sandbox initialized at: {sandbox_dir.relative_to(root)}")
+    logger.info(f"✅ Sandbox initialized at: {sandbox_dir.relative_to(lab_root)}")
     return sandbox_dir
 
 def clone_repo(sandbox_name: str, repo_name_or_url: str) -> None:
     """Clones a microservice repository into the sandbox folder's clones directory."""
-    root = Path(__file__).resolve().parent
-    sandbox_dir = root / sandbox_name
+    lab_root = Path(__file__).resolve().parent.parent
+    sandbox_dir = lab_root / sandbox_name
     
     if not sandbox_dir.exists():
         sandbox_dir = create_sandbox(sandbox_name)
@@ -80,35 +102,35 @@ def clone_repo(sandbox_name: str, repo_name_or_url: str) -> None:
     target_clone_dir = sandbox_dir / "clones" / repo_name
     
     if target_clone_dir.exists():
-        print(f"ℹ️ Repository '{repo_name}' already cloned in sandbox.")
+        logger.info(f"Repository '{repo_name}' already cloned in sandbox.")
         return
         
-    print(f"🐙 Cloning {git_url} into sandbox...")
+    logger.info(f"🐙 Cloning {git_url} into sandbox...")
     try:
         subprocess.run(
             ["git", "clone", "--depth", "1", git_url, str(target_clone_dir)],
             check=True
         )
-        print(f"✅ Successfully cloned '{repo_name}' into {target_clone_dir.relative_to(root)}")
+        logger.info(f"✅ Successfully cloned '{repo_name}' into {target_clone_dir.relative_to(lab_root)}")
     except subprocess.CalledProcessError as e:
-        print(f"❌ Git clone failed: {e}")
+        logger.error(f"Git clone failed: {e}")
 
 def extract_file(sandbox_name: str, repo_name: str, rel_file_path: str) -> None:
     """Extracts a specific file from a clone into the sandbox stubs folder."""
-    root = Path(__file__).resolve().parent
-    sandbox_dir = root / sandbox_name
+    lab_root = Path(__file__).resolve().parent.parent
+    sandbox_dir = lab_root / sandbox_name
     clone_file = sandbox_dir / "clones" / repo_name / rel_file_path
     
     if not clone_file.exists():
-        print(f"❌ Error: File {rel_file_path} not found in clone '{repo_name}'.")
+        logger.error(f"File {rel_file_path} not found in clone '{repo_name}'.")
         return
         
     target_stub_path = sandbox_dir / "stubs" / Path(rel_file_path).name
     shutil.copy(str(clone_file), str(target_stub_path))
-    print(f"📥 Extracted stub: {rel_file_path} -> {target_stub_path.relative_to(root)}")
+    logger.info(f"📥 Extracted stub: {rel_file_path} -> {target_stub_path.relative_to(lab_root)}")
 
 def print_help() -> None:
-    print("""🧪 Bastien-Antigravity Lab Manager
+    logger.info("""🧪 Bastien-Antigravity Lab Manager
 Usage:
   python lab_manager.py create <sandbox_name>
   python lab_manager.py clone <sandbox_name> <repo_name_or_url>
@@ -127,19 +149,18 @@ def main():
         create_sandbox(name)
     elif command == "clone":
         if len(sys.argv) < 4:
-            print("❌ Error: Repository name or URL is required.")
+            logger.error("Repository name or URL is required.")
             sys.exit(1)
         clone_repo(name, sys.argv[3])
     elif command == "extract":
         if len(sys.argv) < 5:
-            print("❌ Error: Repository name and file path are required.")
+            logger.error("Repository name and file path are required.")
             sys.exit(1)
         extract_file(name, sys.argv[3], sys.argv[4])
     else:
-        print(f"❌ Unknown command: {command}")
+        logger.error(f"Unknown command: {command}")
         print_help()
         sys.exit(1)
-
 
 if __name__ == '__main__':
     main()

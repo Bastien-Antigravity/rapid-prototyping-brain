@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding:utf-8
+
 """
 ESSENTIAL PROCESS:
 Audits the Rapid Prototyping Labs root and archives any historical CHAT or EXP files
@@ -9,30 +10,38 @@ DATA FLOW:
 1. Scans the repository root for CHAT-*.md or EXP-*.md.
 2. Moves found files to the 'experiments/' subdirectory.
 3. Verifies that ignore files (.aiignore, .mcpignore, .geminiignore) are intact.
+
+KEY PARAMETERS:
+- lab_root: Root directory of 04-Rapid-Prototyping.
+- archive_dir: Target destination for historical files (experiments/).
 """
-import os, sys
-# Ensure we are running inside the virtual environment
-_venv_dir = os.path.dirname(os.path.abspath(__file__))
-while _venv_dir and _venv_dir != '/' and not os.path.exists(os.path.join(_venv_dir, ".venv")):
-    _parent = os.path.dirname(_venv_dir)
-    if _parent == _venv_dir:
-        break
-    _venv_dir = _parent
-_venv_python = os.path.join(_venv_dir, ".venv", "Scripts", "python.exe") if os.name == "nt" else os.path.join(_venv_dir, ".venv", "bin", "python3")
-if os.path.exists(_venv_python):
-    try:
-        if not os.path.samefile(sys.executable, _venv_python):
-            os.execl(_venv_python, _venv_python, *sys.argv)
-    except OSError:
-        pass
 
-
-from shutil import move as shutilMove
+import sys
 from pathlib import Path
+from shutil import move as shutilMove
+
+# -----------------------------------------------------------------------------
+
+try:
+    from microservice_toolbox.utils.bootstrap import bootstrap_microservice
+except ImportError:
+    for parent in Path(__file__).resolve().parents:
+        toolbox_py = parent / "microservice-toolbox" / "python"
+        if toolbox_py.exists():
+            sys.path.insert(0, str(toolbox_py))
+            break
+    from microservice_toolbox.utils.bootstrap import bootstrap_microservice
+
+bootstrap_microservice(__file__, app_name="lab_archive")
+
+from microservice_toolbox.logger import UniLog
+logger = UniLog(app_name="lab_archive", config_profile="standalone", logger_profile="devel")
+
+# -----------------------------------------------------------------------------
 
 def run_archive() -> None:
-    root = Path(__file__).resolve().parent
-    archive_dir = root / "experiments"
+    lab_root = Path(__file__).resolve().parent.parent
+    archive_dir = lab_root / "experiments"
     
     # 1. Ensure archive directory exists
     archive_dir.mkdir(exist_ok=True)
@@ -44,16 +53,16 @@ def run_archive() -> None:
         if not ignore_file.exists():
             with open(ignore_file, "w", encoding="utf-8") as f:
                 f.write("*\n")
-            print(f"✨ Created missing ignore file: {filename}")
+            logger.info(f"✨ Created missing ignore file: {filename}")
 
     # 3. Scan for files to archive
-    targets = list(root.glob("CHAT-*.md")) + list(root.glob("EXP-*.md"))
+    targets = list(lab_root.glob("CHAT-*.md")) + list(lab_root.glob("EXP-*.md"))
     
     if not targets:
-        print("\n✨ LAB IS ALREADY PERFECTLY CLEAN & READY FOR NEW EXPERIMENTS! (0 files to archive)")
+        logger.info("✨ Lab is already clean: 0 files to archive.")
         return
 
-    print(f"\n📦 FOUND {len(targets)} HISTORICAL FILE(S) TO ARCHIVE:")
+    logger.info(f"📦 Found {len(targets)} historical file(s) to archive:")
     for filepath in targets:
         dest = archive_dir / filepath.name
         
@@ -67,9 +76,9 @@ def run_archive() -> None:
             dest = archive_dir / f"{base}_{counter}{ext}"
             
         shutilMove(str(filepath), str(dest))
-        print(f"  [-] Archived: {filepath.name} -> experiments/{dest.name}")
+        logger.info(f"  [-] Archived: {filepath.name} -> experiments/{dest.name}")
 
-    print("\n✅ ARCHIVING COMPLETE! THE LAB ROOT IS NOW ZERO-FRICTION & READY.")
+    logger.info("✅ Archiving complete: The lab root is clean and ready.")
 
 def main():
     run_archive()

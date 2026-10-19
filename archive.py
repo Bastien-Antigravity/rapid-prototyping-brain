@@ -10,26 +10,22 @@ DATA FLOW:
 2. Adds src/ to sys.path.
 3. Imports and runs main from archive.
 """
-import os
 import sys
 from pathlib import Path
 
-# --- Virtual Environment Re-Execution Ritual ---
-_self_dir = Path(__file__).resolve().parent
-_venv_python = _self_dir / ".venv" / "Scripts" / "python.exe" if os.name == "nt" else _self_dir / ".venv" / "bin" / "python3"
-if os.path.exists(_venv_python):
-    try:
-        if not os.path.samefile(sys.executable, _venv_python):
-            os.execl(_venv_python, _venv_python, *sys.argv)
-    except OSError:
-        pass
+try:
+    from microservice_toolbox.utils.bootstrap import bootstrap_microservice
+except ImportError:
+    for parent in Path(__file__).resolve().parents:
+        toolbox_py = parent / "microservice-toolbox" / "python"
+        if toolbox_py.exists():
+            sys.path.insert(0, str(toolbox_py))
+            break
+    from microservice_toolbox.utils.bootstrap import bootstrap_microservice
 
-# Add src to system path
-_src_dir = _self_dir / "src"
-if str(_src_dir) not in sys.path:
-    sys.path.insert(0, str(_src_dir))
+bootstrap_microservice(__file__, app_name="lab_archive")
 
-from archive import main
+from src.archive import main
 
 if __name__ == "__main__":
     main()
